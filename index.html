@@ -7,44 +7,238 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css" id="theme" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --accent: #5b9bd5;
-      --fg-muted: #b8c0cc;
-      --border: #3a4556;
+      --accent: #38bdf8;
+      --accent2: #a78bfa;
+      --fg-muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.22);
+      --glass: rgba(15, 23, 42, 0.55);
+      --glass-edge: rgba(255, 255, 255, 0.08);
     }
-    .reveal { font-family: "Segoe UI", system-ui, sans-serif; }
-    .reveal h1, .reveal h2, .reveal h3 { color: #fff; font-weight: 600; }
-    .reveal .subtitle { color: var(--fg-muted); font-size: 0.55em; margin-top: 0.6em; }
-    .reveal .accent { color: var(--accent); }
-    .reveal table { font-size: 0.45em; border-collapse: collapse; margin: 0.6em auto; width: 100%; max-width: 100%; }
+    html, body {
+      min-height: 100%;
+      margin: 0;
+      background: #030712;
+    }
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .ambient__blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+      animation: floatBlob 22s ease-in-out infinite;
+    }
+    .ambient__blob--1 {
+      width: min(90vw, 720px);
+      height: min(90vw, 720px);
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 70%);
+      top: -15%;
+      left: -10%;
+      animation-delay: 0s;
+    }
+    .ambient__blob--2 {
+      width: min(80vw, 600px);
+      height: min(80vw, 600px);
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, transparent 70%);
+      bottom: -20%;
+      right: -15%;
+      animation-delay: -7s;
+      animation-duration: 26s;
+    }
+    .ambient__blob--3 {
+      width: min(70vw, 500px);
+      height: min(70vw, 500px);
+      background: radial-gradient(circle, rgba(52, 211, 153, 0.22) 0%, transparent 70%);
+      top: 40%;
+      left: 35%;
+      animation-delay: -12s;
+      animation-duration: 19s;
+    }
+    @keyframes floatBlob {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(4%, -3%) scale(1.06); }
+      66% { transform: translate(-3%, 5%) scale(0.96); }
+    }
+    .ambient__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, black 15%, transparent 75%);
+      animation: gridDrift 40s linear infinite;
+    }
+    @keyframes gridDrift {
+      from { background-position: 0 0, 0 0; }
+      to { background-position: 48px 48px, 48px 48px; }
+    }
+    .ambient__noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .reveal {
+      font-family: "DM Sans", system-ui, sans-serif;
+      color: #e2e8f0;
+      position: relative;
+      z-index: 1;
+    }
+    .reveal .slides { text-align: left; }
+    .reveal .slides > section {
+      padding: 1.1em 1.35em !important;
+      box-sizing: border-box;
+      background: linear-gradient(145deg, var(--glass) 0%, rgba(30, 41, 59, 0.42) 100%);
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      border: 1px solid var(--glass-edge);
+      border-radius: 22px;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 24px 50px -12px rgba(0, 0, 0, 0.55),
+        0 0 80px -20px rgba(56, 189, 248, 0.15);
+    }
+    .reveal .slides section.has-dark-code pre code {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      color: #f8fafc;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .reveal h2 { font-size: 1.35em; border-bottom: 1px solid var(--border); padding-bottom: 0.35em; margin-bottom: 0.5em !important; }
+    .slide-title { text-align: center; }
+    .reveal-viewport { background: transparent !important; }
+    .slide-title h1 {
+      font-size: 1.65em;
+      line-height: 1.15;
+      background: linear-gradient(115deg, #fff 0%, #cbd5e1 35%, #38bdf8 55%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+      filter: drop-shadow(0 8px 24px rgba(56, 189, 248, 0.25));
+    }
+    .slide-title .tagline {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35em;
+      justify-content: center;
+      margin-top: 1em;
+    }
+    .slide-title .tagline span {
+      font-size: 0.38em;
+      padding: 0.35em 0.75em;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--fg-muted);
+    }
+    .reveal .subtitle { color: var(--fg-muted); font-size: 0.55em; margin-top: 0.5em; font-weight: 500; }
+    .reveal .accent { color: var(--accent); font-weight: 600; }
+    .reveal a {
+      color: #7dd3fc;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(125, 211, 252, 0.35);
+      transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .reveal a:hover {
+      color: #fff;
+      border-bottom-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
+    }
+    .reveal table { font-size: 0.45em; border-collapse: collapse; margin: 0.6em auto; width: 100%; max-width: 100%; border-radius: 12px; overflow: hidden; }
     .reveal table th, .reveal table td {
-      border: 1px solid var(--border); padding: 0.45em 0.55em; text-align: left; vertical-align: top;
+      border: 1px solid var(--border); padding: 0.5em 0.6em; text-align: left; vertical-align: top;
     }
-    .reveal table thead th { background: #1e2633; color: #e8ecf1; }
-    .reveal table tbody tr:nth-child(even) { background: rgba(255,255,255,0.04); }
-    .reveal .small { font-size: 0.75em; color: var(--fg-muted); }
+    .reveal table thead th {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%);
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+    .reveal table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.03); }
+    .reveal table tbody tr:hover { background: rgba(56, 189, 248, 0.06); }
+    .reveal .small { font-size: 0.75em; color: var(--fg-muted); line-height: 1.45; }
     .reveal .placeholder-box {
-      border: 2px dashed var(--border); border-radius: 8px; padding: 1.2em; margin: 0.8em auto; max-width: 720px;
-      background: #121820; color: var(--fg-muted); font-size: 0.4em;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1em;
+      margin: 0.75em auto;
+      max-width: 720px;
+      background: rgba(2, 6, 23, 0.35);
+      font-size: 0.4em;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
     }
-    .reveal .placeholder-box img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px; }
-    .reveal .caption { font-size: 0.35em; color: var(--fg-muted); margin-top: 0.5em; text-align: center; }
+    .reveal .placeholder-box img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .reveal .caption { font-size: 0.35em; color: var(--fg-muted); margin-top: 0.55em; text-align: center; }
     .reveal pre { width: 100%; box-shadow: none; font-size: 0.38em; }
-    .reveal pre code { max-height: 380px; padding: 0.6em 0.8em; border-radius: 6px; }
+    .reveal pre code {
+      max-height: 380px;
+      padding: 0.65em 0.85em;
+      border-radius: 10px;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      background: rgba(2, 6, 23, 0.65) !important;
+    }
+    .reveal code:not(pre code) {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.9em;
+      padding: 0.12em 0.35em;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: #bae6fd;
+    }
     .reveal ul { text-align: left; }
-    .reveal .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; align-items: start; }
+    .reveal .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1em; align-items: start; }
     @media (max-width: 900px) { .reveal .cols { grid-template-columns: 1fr; } }
+    .reveal .progress { color: rgba(56, 189, 248, 0.85); }
+    .reveal .slide-number {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.45em;
+      color: var(--fg-muted);
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__blob ambient__blob--1"></div>
+    <div class="ambient__blob ambient__blob--2"></div>
+    <div class="ambient__blob ambient__blob--3"></div>
+    <div class="ambient__grid"></div>
+    <div class="ambient__noise"></div>
+  </div>
   <div class="reveal">
     <div class="slides">
-      <section>
+      <section class="slide-title">
         <h1>Commission Engine Challenge</h1>
         <p class="subtitle">Social.Academy — AI Operations Manager</p>
-        <p>Florian Kuehnast · April 2026</p>
-        <p class="small">4 Teile · Architektur · Code · AI-Collaboration · Code Review</p>
+        <p style="font-size:0.58em;color:#cbd5e1;">Florian Kuehnast · April 2026</p>
+        <div class="tagline">
+          <span>Architektur</span>
+          <span>Code</span>
+          <span>AI-Collaboration</span>
+          <span>Code Review</span>
+        </div>
       </section>
 
       <section>
