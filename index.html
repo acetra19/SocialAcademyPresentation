@@ -4,219 +4,340 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Commission Engine Challenge — Social.Academy</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css" id="theme" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
       --accent: #38bdf8;
       --accent2: #a78bfa;
-      --fg-muted: #94a3b8;
-      --border: rgba(148, 163, 184, 0.22);
-      --glass: rgba(15, 23, 42, 0.55);
-      --glass-edge: rgba(255, 255, 255, 0.08);
+      --muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.2);
+      --glass: rgba(15, 23, 42, 0.5);
+      --edge: rgba(255, 255, 255, 0.07);
+      --max: 52rem;
     }
-    html, body {
-      min-height: 100%;
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
       margin: 0;
+      min-height: 100vh;
+      font-family: "DM Sans", system-ui, sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #e2e8f0;
       background: #030712;
     }
     .ambient {
       position: fixed;
       inset: 0;
       z-index: 0;
-      overflow: hidden;
       pointer-events: none;
+      overflow: hidden;
     }
     .ambient__blob {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.55;
-      animation: floatBlob 22s ease-in-out infinite;
+      filter: blur(85px);
+      opacity: 0.5;
+      animation: blob 24s ease-in-out infinite;
     }
     .ambient__blob--1 {
-      width: min(90vw, 720px);
-      height: min(90vw, 720px);
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 70%);
-      top: -15%;
-      left: -10%;
-      animation-delay: 0s;
+      width: min(90vw, 700px);
+      height: min(90vw, 700px);
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.42) 0%, transparent 72%);
+      top: -12%;
+      left: -8%;
     }
     .ambient__blob--2 {
-      width: min(80vw, 600px);
-      height: min(80vw, 600px);
-      background: radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, transparent 70%);
-      bottom: -20%;
-      right: -15%;
-      animation-delay: -7s;
-      animation-duration: 26s;
+      width: min(75vw, 560px);
+      height: min(75vw, 560px);
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.38) 0%, transparent 72%);
+      bottom: -18%;
+      right: -12%;
+      animation-delay: -8s;
+      animation-duration: 28s;
     }
     .ambient__blob--3 {
-      width: min(70vw, 500px);
-      height: min(70vw, 500px);
-      background: radial-gradient(circle, rgba(52, 211, 153, 0.22) 0%, transparent 70%);
-      top: 40%;
-      left: 35%;
-      animation-delay: -12s;
-      animation-duration: 19s;
+      width: min(60vw, 420px);
+      height: min(60vw, 420px);
+      background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 72%);
+      top: 45%;
+      left: 40%;
+      animation-delay: -14s;
+      animation-duration: 20s;
     }
-    @keyframes floatBlob {
+    @keyframes blob {
       0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(4%, -3%) scale(1.06); }
-      66% { transform: translate(-3%, 5%) scale(0.96); }
+      40% { transform: translate(3%, -4%) scale(1.05); }
+      70% { transform: translate(-4%, 3%) scale(0.97); }
     }
     .ambient__grid {
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, black 15%, transparent 75%);
-      animation: gridDrift 40s linear infinite;
+        linear-gradient(rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 10%, transparent 72%);
+      animation: drift 45s linear infinite;
     }
-    @keyframes gridDrift {
-      from { background-position: 0 0, 0 0; }
-      to { background-position: 48px 48px, 48px 48px; }
+    @keyframes drift {
+      to { background-position: 44px 44px, 44px 44px; }
     }
     .ambient__noise {
       position: absolute;
       inset: 0;
-      opacity: 0.035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
-    .reveal {
-      font-family: "DM Sans", system-ui, sans-serif;
-      color: #e2e8f0;
+    .site {
       position: relative;
       z-index: 1;
     }
-    .reveal .slides { text-align: left; }
-    .reveal .slides > section {
-      padding: 1.1em 1.35em !important;
-      box-sizing: border-box;
-      background: linear-gradient(145deg, var(--glass) 0%, rgba(30, 41, 59, 0.42) 100%);
-      backdrop-filter: blur(18px) saturate(1.35);
-      -webkit-backdrop-filter: blur(18px) saturate(1.35);
-      border: 1px solid var(--glass-edge);
-      border-radius: 22px;
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-        0 24px 50px -12px rgba(0, 0, 0, 0.55),
-        0 0 80px -20px rgba(56, 189, 248, 0.15);
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.65rem clamp(1rem, 4vw, 2rem);
+      background: rgba(3, 7, 18, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
     }
-    .reveal .slides section.has-dark-code pre code {
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-    }
-    .reveal h1, .reveal h2, .reveal h3 {
-      color: #f8fafc;
+    .nav__brand {
       font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: 0.95rem;
+      color: #f8fafc;
+      text-decoration: none;
     }
-    .reveal h2 { font-size: 1.35em; border-bottom: 1px solid var(--border); padding-bottom: 0.35em; margin-bottom: 0.5em !important; }
-    .slide-title { text-align: center; }
-    .reveal-viewport { background: transparent !important; }
-    .slide-title h1 {
-      font-size: 1.65em;
+    .nav__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+      font-size: 0.88rem;
+    }
+    .nav__links a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .nav__links a:hover { color: #fff; border-bottom-color: rgba(56, 189, 248, 0.5); }
+    .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem); }
+    .hero {
+      padding: clamp(2.5rem, 8vw, 4.5rem) 0 clamp(2rem, 5vw, 3rem);
+      text-align: center;
+    }
+    .kicker {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.65rem, 4.5vw, 2.35rem);
+      font-weight: 700;
       line-height: 1.15;
-      background: linear-gradient(115deg, #fff 0%, #cbd5e1 35%, #38bdf8 55%, #a78bfa 100%);
+      letter-spacing: -0.03em;
+      background: linear-gradient(120deg, #fff 0%, #cbd5e1 38%, #38bdf8 62%, #a78bfa 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: none;
-      filter: drop-shadow(0 8px 24px rgba(56, 189, 248, 0.25));
     }
-    .slide-title .tagline {
-      display: inline-flex;
+    .hero__sub {
+      margin: 0 auto 1.25rem;
+      max-width: 38rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .hero__meta { color: #cbd5e1; font-size: 0.95rem; margin-bottom: 1rem; }
+    .chips {
+      display: flex;
       flex-wrap: wrap;
-      gap: 0.35em;
+      gap: 0.5rem;
       justify-content: center;
-      margin-top: 1em;
     }
-    .slide-title .tagline span {
-      font-size: 0.38em;
-      padding: 0.35em 0.75em;
+    .chips span {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.5);
-      color: var(--fg-muted);
+      background: rgba(15, 23, 42, 0.55);
+      color: var(--muted);
     }
-    .reveal .subtitle { color: var(--fg-muted); font-size: 0.55em; margin-top: 0.5em; font-weight: 500; }
-    .reveal .accent { color: var(--accent); font-weight: 600; }
-    .reveal a {
-      color: #7dd3fc;
+    section.block {
+      padding: clamp(2rem, 5vw, 3rem) 0;
+    }
+    .block h2 {
+      margin: 0 0 1rem;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #f8fafc;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .block h3 {
+      margin: 1.5rem 0 0.65rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .panel {
+      background: linear-gradient(160deg, var(--glass) 0%, rgba(30, 41, 59, 0.38) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--edge);
+      border-radius: 18px;
+      padding: 1.35rem 1.5rem;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .panel + .panel { margin-top: 1rem; }
+    .muted { color: var(--muted); font-size: 0.95rem; }
+    .accent { color: var(--accent); font-weight: 600; }
+    .list-check {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .list-check li { margin: 0.45rem 0; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 600px) { .grid-4 { grid-template-columns: 1fr; } }
+    .card {
+      display: block;
+      padding: 1.1rem 1.15rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.45);
       text-decoration: none;
-      border-bottom: 1px solid rgba(125, 211, 252, 0.35);
-      transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+      color: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     }
-    .reveal a:hover {
-      color: #fff;
-      border-bottom-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 32px rgba(56, 189, 248, 0.12);
+      transform: translateY(-2px);
     }
-    .reveal table { font-size: 0.45em; border-collapse: collapse; margin: 0.6em auto; width: 100%; max-width: 100%; border-radius: 12px; overflow: hidden; }
-    .reveal table th, .reveal table td {
-      border: 1px solid var(--border); padding: 0.5em 0.6em; text-align: left; vertical-align: top;
+    .card__num {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
     }
-    .reveal table thead th {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%);
-      color: #f1f5f9;
+    .card__title { font-weight: 700; font-size: 1rem; margin-bottom: 0.35rem; color: #f1f5f9; }
+    .card__desc { font-size: 0.88rem; color: var(--muted); margin: 0; line-height: 1.45; }
+    table.data {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 0.75rem 0 0;
+    }
+    table.data th, table.data td {
+      border: 1px solid var(--border);
+      padding: 0.55rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.data thead th {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.88));
+      color: #f8fafc;
       font-weight: 600;
     }
-    .reveal table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.03); }
-    .reveal table tbody tr:hover { background: rgba(56, 189, 248, 0.06); }
-    .reveal .small { font-size: 0.75em; color: var(--fg-muted); line-height: 1.45; }
-    .reveal .placeholder-box {
-      border: 1px solid var(--border);
+    table.data tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.03); }
+    table.data tbody tr:hover { background: rgba(56, 189, 248, 0.06); }
+    .figure {
+      margin-top: 1rem;
       border-radius: 14px;
-      padding: 1em;
-      margin: 0.75em auto;
-      max-width: 720px;
-      background: rgba(2, 6, 23, 0.35);
-      font-size: 0.4em;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      background: rgba(2, 6, 23, 0.4);
     }
-    .reveal .placeholder-box img {
+    .figure img {
+      display: block;
       max-width: 100%;
       height: auto;
-      display: block;
       margin: 0 auto;
       border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
     }
-    .reveal .caption { font-size: 0.35em; color: var(--fg-muted); margin-top: 0.55em; text-align: center; }
-    .reveal pre { width: 100%; box-shadow: none; font-size: 0.38em; }
-    .reveal pre code {
-      max-height: 380px;
-      padding: 0.65em 0.85em;
+    .figure figcaption {
+      margin-top: 0.6rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    pre {
+      margin: 0.75rem 0 0;
+      font-size: 0.82rem;
       border-radius: 10px;
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-      border: 1px solid rgba(148, 163, 184, 0.15);
-      background: rgba(2, 6, 23, 0.65) !important;
+      overflow: auto;
     }
-    .reveal code:not(pre code) {
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-      font-size: 0.9em;
-      padding: 0.12em 0.35em;
+    pre code {
+      display: block;
+      padding: 1rem 1.1rem !important;
+      font-family: "JetBrains Mono", ui-monospace, monospace !important;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.75) !important;
+    }
+    :not(pre) > code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.88em;
+      padding: 0.15em 0.4em;
       border-radius: 6px;
       background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.22);
       color: #bae6fd;
     }
-    .reveal ul { text-align: left; }
-    .reveal .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1em; align-items: start; }
-    @media (max-width: 900px) { .reveal .cols { grid-template-columns: 1fr; } }
-    .reveal .progress { color: rgba(56, 189, 248, 0.85); }
-    .reveal .slide-number {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.45em;
-      color: var(--fg-muted);
-      opacity: 0.9;
+    details.prompt {
+      margin-top: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.35);
+      padding: 0 1rem;
     }
+    details.prompt summary {
+      cursor: pointer;
+      font-weight: 600;
+      padding: 0.85rem 0;
+      list-style: none;
+      color: #e2e8f0;
+    }
+    details.prompt summary::-webkit-details-marker { display: none; }
+    details.prompt[open] summary { border-bottom: 1px solid var(--border); margin-bottom: 0.75rem; }
+    details.prompt .inner { padding-bottom: 1rem; }
+    .footer {
+      padding: 2.5rem 0 3rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+    .footer a { color: #7dd3fc; }
   </style>
 </head>
 <body>
@@ -227,104 +348,178 @@
     <div class="ambient__grid"></div>
     <div class="ambient__noise"></div>
   </div>
-  <div class="reveal">
-    <div class="slides">
-      <section class="slide-title">
-        <h1>Commission Engine Challenge</h1>
-        <p class="subtitle">Social.Academy — AI Operations Manager</p>
-        <p style="font-size:0.58em;color:#cbd5e1;">Florian Kuehnast · April 2026</p>
-        <div class="tagline">
-          <span>Architektur</span>
-          <span>Code</span>
-          <span>AI-Collaboration</span>
-          <span>Code Review</span>
+
+  <div class="site">
+    <header class="nav">
+      <a class="nav__brand" href="#top">Commission Engine</a>
+      <nav class="nav__links" aria-label="Sektionen">
+        <a href="#warum">Warum</a>
+        <a href="#aufbau">Aufbau</a>
+        <a href="#teil1">Teil 1</a>
+        <a href="#edge">Edge Cases</a>
+        <a href="#teil2">Teil 2</a>
+        <a href="#teil3">AI</a>
+        <a href="#teil4">Make.com</a>
+        <a href="#deliverables">Links</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <div class="hero wrap">
+        <p class="kicker">Bewerbungsprojekt · Social.Academy</p>
+        <h1>Commission Engine Challenge — von Datenmodell bis Code Review</h1>
+        <p class="hero__sub">
+          Vier aufeinander aufbauende Teile: Airtable-Architektur, Python-Setter-Logik, ehrliche AI-Collaboration und eine Make.com-Root-Cause-Analyse — alles dokumentiert und verlinkt.
+        </p>
+        <p class="hero__meta">Florian Kuehnast · AI Operations Manager · April 2026</p>
+        <div class="chips">
+          <span>Airtable</span>
+          <span>Make.com</span>
+          <span>Python</span>
+          <span>Gemini + Cursor</span>
+        </div>
+      </div>
+
+      <section class="block wrap" id="warum">
+        <h2>Warum dieses Projekt</h2>
+        <div class="panel">
+          <ul class="list-check">
+            <li><strong>End-to-End denken:</strong> Vom Datenmodell über automatisierte Auszahlungslogik bis zum Debugging in Production-Formeln — ein roter Faden statt isolierter Snippets.</li>
+            <li><strong>Operativ relevant:</strong> Doppelzahlungen, Refunds und Personalwechsel sind keine Folien-Theorie, sondern explizit modellierte Szenarien.</li>
+            <li><strong>Nachvollziehbar:</strong> Chats, Code, Skizzen und Screenshots sind gebündelt — inklusive ehrlicher AI-Fehler und Korrekturen.</li>
+          </ul>
         </div>
       </section>
 
-      <section>
-        <h2>Airtable Datenmodell — 6 Tabellen</h2>
-        <table>
-          <thead><tr><th>Tabelle</th><th>Zweck</th></tr></thead>
-          <tbody>
-            <tr><td>DEALS</td><td>Kerndaten des Vertragsabschlusses (Snapshot der Sales-Rollen)</td></tr>
-            <tr><td>INSTALLMENTS</td><td>Eine Rate = ein Record, verknüpft mit easybill_payment_id</td></tr>
-            <tr><td>TEAM_MEMBERS</td><td>Alle Mitarbeiter (aktive + ehemalige)</td></tr>
-            <tr><td>COMMISSION_RULES</td><td>Provisionssätze je Rolle und Deal-Typ</td></tr>
-            <tr><td>COMMISSIONS</td><td>Berechnete Provision pro Empfänger und Installment</td></tr>
-            <tr><td>ZUWEISUNGEN</td><td>Dynamische AM-Zuweisung (active_from / active_until)</td></tr>
-          </tbody>
-        </table>
-        <p class="small"><strong class="accent">Key Design:</strong> opener_id, setter_id, closer_id → <strong>Snapshot</strong> im DEALS-Record (unveränderlich). AM-Zuweisung → <strong>dynamisch</strong> via ZUWEISUNGEN (nachträglich änderbar).</p>
-        <p class="small">ZUWEISUNGEN: zuweisung_id (PK), deal_id (FK), employee_id (FK), role, active_from, active_until</p>
-        <div class="placeholder-box">
-          <img src="MiroScreenshot.png" alt="Airtable / Architektur (Miro)" style="max-height:220px;width:auto;" />
-          <p class="caption">Miro — Airtable Datenmodell</p>
+      <section class="block wrap" id="aufbau">
+        <h2>Aufbau in vier Teilen</h2>
+        <p class="muted" style="margin-top:-0.25rem;">Springe direkt in den Teil — oder einfach weiterlesen.</p>
+        <div class="grid-4" style="margin-top:1.25rem;">
+          <a class="card" href="#teil1">
+            <div class="card__num">01</div>
+            <div class="card__title">Architektur</div>
+            <p class="card__desc">Airtable mit sechs Tabellen, Snapshots vs. dynamische Zuweisungen, Miro-Überblick.</p>
+          </a>
+          <a class="card" href="#teil2">
+            <div class="card__num">02</div>
+            <div class="card__title">Code</div>
+            <p class="card__desc">Setter-Provision aus echtem Messy-JSON — Staffeln, Idempotenz, saubere Skip-Gründe.</p>
+          </a>
+          <a class="card" href="#teil3">
+            <div class="card__num">03</div>
+            <div class="card__title">AI-Collaboration</div>
+            <p class="card__desc">Wo Gemini &amp; Cursor Zeit sparten — und welche Fehler du selbst korrigieren musst.</p>
+          </a>
+          <a class="card" href="#teil4">
+            <div class="card__num">04</div>
+            <div class="card__title">Code Review</div>
+            <p class="card__desc">Make.com-Formel-Bug: impliziter Map-Operator vs. ein Kontakt im Live-Betrieb.</p>
+          </a>
         </div>
       </section>
 
-      <section>
+      <section class="block wrap" id="teil1">
+        <h2>Teil 1 — Airtable Datenmodell (6 Tabellen)</h2>
+        <div class="panel">
+          <table class="data">
+            <thead><tr><th>Tabelle</th><th>Zweck</th></tr></thead>
+            <tbody>
+              <tr><td>DEALS</td><td>Kerndaten des Vertragsabschlusses (Snapshot der Sales-Rollen)</td></tr>
+              <tr><td>INSTALLMENTS</td><td>Eine Rate = ein Record, verknüpft mit easybill_payment_id</td></tr>
+              <tr><td>TEAM_MEMBERS</td><td>Alle Mitarbeiter (aktive + ehemalige)</td></tr>
+              <tr><td>COMMISSION_RULES</td><td>Provisionssätze je Rolle und Deal-Typ</td></tr>
+              <tr><td>COMMISSIONS</td><td>Berechnete Provision pro Empfänger und Installment</td></tr>
+              <tr><td>ZUWEISUNGEN</td><td>Dynamische AM-Zuweisung (active_from / active_until)</td></tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin-top:1rem;">
+            <strong class="accent">Key Design:</strong> <code>opener_id</code>, <code>setter_id</code>, <code>closer_id</code> liegen als <strong>Snapshot</strong> im DEALS-Record (unveränderlich). Die AM-Zuweisung ist <strong>dynamisch</strong> über ZUWEISUNGEN und nachträglich änderbar.
+          </p>
+          <p class="muted">ZUWEISUNGEN: <code>zuweisung_id</code> (PK), <code>deal_id</code> (FK), <code>employee_id</code> (FK), <code>role</code>, <code>active_from</code>, <code>active_until</code></p>
+          <figure class="figure">
+            <img src="MiroScreenshot.png" alt="Airtable Datenmodell in Miro" width="800" height="400" loading="lazy" />
+            <figcaption>Miro — Airtable Datenmodell</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="block wrap" id="edge">
         <h2>Edge Cases — wie das Modell damit umgeht</h2>
-        <p><strong class="accent">Szenario 1 — Doppelzahlung:</strong> Make.com sucht beim Webhook die easybill_payment_id in INSTALLMENTS. Existiert der Record → Workflow bricht ab. Unique Key auf easybill_payment_id als Datenbankschutz.</p>
-        <p><strong class="accent">Szenario 2 — Refund:</strong> Offene COMMISSIONS → Status <code>storniert</code>. Bereits ausgezahlte → neuer Record mit negativem Betrag + Status <code>forderung_offen</code>. Ursprüngliche Records bleiben (Audit-Trail).</p>
-        <p class="small">Einschränkung: forderung_offen löst keinen automatischen Mahnungs-Workflow aus — manueller Schritt nötig.</p>
-        <p><strong class="accent">Szenario 3 — Personalwechsel:</strong> Sales-Snapshots → Rate geht an den Deal-Closer. AM-Wechsel → neuer ZUWEISUNGEN-Record. Bei Zahlungseingang: active_from ≤ paid_at und active_until leer oder in Zukunft.</p>
-        <p class="small">Einschränkung: Änderung der ZUWEISUNGEN ist manuell.</p>
+        <div class="panel">
+          <h3>Szenario 1 — Doppelzahlung</h3>
+          <p>Make.com sucht beim Webhook-Eingang die <code>easybill_payment_id</code> in INSTALLMENTS. Existiert der Record bereits → der Workflow bricht ab. Zusätzlich: Unique Key auf <code>easybill_payment_id</code> als Datenbankschutz.</p>
+          <h3>Szenario 2 — Refund</h3>
+          <p>Offene COMMISSIONS erhalten Status <code>storniert</code>. Bereits ausgezahlte Beträge → neuer Record mit negativem Betrag und Status <code>forderung_offen</code>. Ursprüngliche Records bleiben unangetastet (Audit-Trail).</p>
+          <p class="muted">Einschränkung: <code>forderung_offen</code> startet keinen automatischen Mahnungs-Workflow — manueller Schritt nötig.</p>
+          <h3>Szenario 3 — Personalwechsel</h3>
+          <p>Sales-Snapshots sorgen dafür: Die Rate geht an den Deal-Closer. Bei AM-Wechsel wird ein neuer ZUWEISUNGEN-Record angelegt. Make.com prüft beim Zahlungseingang: <code>active_from</code> ≤ <code>paid_at</code> und <code>active_until</code> leer oder in der Zukunft.</p>
+          <p class="muted">Einschränkung: Änderungen an ZUWEISUNGEN sind manuell.</p>
+        </div>
       </section>
 
-      <section>
+      <section class="block wrap" id="teil2">
         <h2>Teil 2 — Setter-Provision aus messy JSON</h2>
-        <div class="cols">
-          <div>
-            <ul>
-              <li><strong>Input:</strong> settled_deals_sample.json (reale Datenfehler)</li>
-              <li><strong>Output:</strong> commissions.json — ein Objekt pro Deal</li>
-              <li><strong>Staffel (monatlich, Reset am Monatsersten):</strong> 1–10 → 50 €; 11–20 → 80 €; 21+ → 120 €</li>
-              <li><strong>Progressiv</strong> — Rang im Monat zählt</li>
-              <li><strong>Idempotent</strong> — zweiter Lauf: 0 neue Einträge</li>
-            </ul>
+        <div class="panel">
+          <div class="grid-2">
+            <div>
+              <ul class="list-check">
+                <li><strong>Input:</strong> <code>settled_deals_sample.json</code> — reale Datenfehler enthalten</li>
+                <li><strong>Output:</strong> <code>commissions.json</code> — ein Objekt pro Deal</li>
+                <li><strong>Staffel (monatlich, Reset am Monatsersten):</strong> Deals 1–10 → 50 €; 11–20 → 80 €; 21+ → 120 €</li>
+                <li><strong>Progressiv</strong> — jeder Deal nach seinem Rang im Monat</li>
+                <li><strong>Idempotent</strong> — zweiter Lauf erzeugt keine neuen Einträge</li>
+              </ul>
+            </div>
+            <div>
+              <table class="data">
+                <thead><tr><th>Fehler</th><th>Behandlung</th></tr></thead>
+                <tbody>
+                  <tr><td>Duplikat in Input</td><td>Skip → <code>duplicate_in_source</code></td></tr>
+                  <tr><td><code>setter_email</code> null</td><td>Skip → <code>missing_setter_email</code></td></tr>
+                  <tr><td><code>closed_at</code> null</td><td>Skip → <code>missing_closed_at</code></td></tr>
+                  <tr><td>Bereits in commissions.json</td><td>Skip → <code>already_processed</code></td></tr>
+                </tbody>
+              </table>
+              <p class="muted" style="margin-top:0.75rem;"><strong>Verifikation:</strong> 5 verarbeitet / 3 übersprungen · 225 € Gesamtprovision · Self-Close (Setter = Closer): 50 % des Staffelsatzes</p>
+            </div>
           </div>
-          <div>
-            <table>
-              <thead><tr><th>Fehler</th><th>Behandlung</th></tr></thead>
-              <tbody>
-                <tr><td>Duplikat in Input</td><td>Skip → duplicate_in_source</td></tr>
-                <tr><td>setter_email null</td><td>Skip → missing_setter_email</td></tr>
-                <tr><td>closed_at null</td><td>Skip → missing_closed_at</td></tr>
-                <tr><td>Bereits in commissions.json</td><td>Skip → already_processed</td></tr>
-              </tbody>
-            </table>
-            <p class="small"><strong>Verifikation:</strong> 5 verarbeitet / 3 übersprungen · 225 € Gesamt · Self-Close: 50 % des Staffelsatzes</p>
+          <div class="grid-2" style="margin-top:1.25rem;">
+            <figure class="figure" style="margin:0;">
+              <img src="CursorCodeLauf.png" alt="Konsolen-Output Setter Commission" loading="lazy" />
+              <figcaption>Console — Lauf (Processed / Skipped / Total)</figcaption>
+            </figure>
+            <div>
+              <p class="muted" style="margin:0 0 0.5rem;">Erwarteter Output (Referenz)</p>
+              <pre><code class="language-text">Processed: 5 | Skipped: 3 | Total commission: 225.00 EUR</code></pre>
+            </div>
           </div>
-        </div>
-        <div class="placeholder-box cols" style="grid-template-columns:1fr 1fr;align-items:center;">
-          <div>
-            <img src="CursorCodeLauf.png" alt="Console: Setter commission run" style="max-height:260px;width:auto;margin:0 auto;" />
-            <p class="caption">Console — Lauf (Processed / Skipped / Total)</p>
-          </div>
-          <div>
-            <pre><code class="language-text">Processed: 5 | Skipped: 3 | Total commission: 225.00 EUR</code></pre>
-            <p class="caption">Erwarteter Output (Referenz)</p>
-          </div>
+          <figure class="figure" style="margin-top:1rem;">
+            <img src="CursorCodeErstellung.png" alt="Cursor bei der Code-Erstellung" loading="lazy" />
+            <figcaption>Cursor — Code-Erstellung (Kontext)</figcaption>
+          </figure>
         </div>
       </section>
 
-      <section>
-        <h2>Wo AI geholfen hat — und wo nicht</h2>
-        <p class="small"><strong>Tool-Stack:</strong> Gemini [Thinking] + Cursor [Auto]</p>
-        <p><strong>Beschleunigt:</strong> (1) Datenmodell-Grundstruktur — AM/Sales (Snapshot vs. dynamisch) → 5 auf 6 Tabellen. (2) Cursor-Prompt-Iteration — 3 Runden bis Constraints stimmen; nahezu vollständiges Skript.</p>
-        <table>
-          <thead><tr><th>Fehler</th><th>Was Gemini sagte</th><th>Was richtig ist</th></tr></thead>
-          <tbody>
-            <tr><td>Self-Close</td><td>self_closed = true → voller Satz</td><td>50 % des Staffelsatzes</td></tr>
-            <tr><td>Null setter_email</td><td>Fallback no_setter@company.com</td><td>Skip + Log</td></tr>
-            <tr><td>Null closed_at</td><td>Nicht als Skip</td><td>Skip + Log (Datum fehlt für Staffel)</td></tr>
-            <tr><td>Deduplizierung</td><td>Letzten Eintrag behalten</td><td>Skip + Log (keine stille Verfälschung)</td></tr>
-          </tbody>
-        </table>
-        <p class="small"><strong>Fazit:</strong> AI lieferte Geschwindigkeit — Urteilsvermögen war manuell nötig.</p>
-        <div class="fragment">
-          <h3 style="margin-top:0.6em;font-size:0.85em;">Bester Prompt (optional)</h3>
-          <pre style="font-size:0.32em;"><code class="language-text">Drei Korrekturen bevor wir den Prompt finalisieren:
+      <section class="block wrap" id="teil3">
+        <h2>Teil 3 — Wo AI geholfen hat — und wo nicht</h2>
+        <div class="panel">
+          <p class="muted" style="margin-top:0;"><strong>Tool-Stack:</strong> Gemini [Thinking] + Cursor [Auto]</p>
+          <p><strong>Beschleunigt:</strong> (1) Datenmodell-Grundstruktur — die AM/Sales-Unterscheidung (Snapshot vs. dynamisch) → Erweiterung auf 6 Tabellen. (2) Cursor-Prompt-Iteration — mehrere Runden bis alle Constraints sitzen; nahezu vollständiges Skript.</p>
+          <table class="data">
+            <thead><tr><th>Fehler</th><th>Was Gemini sagte</th><th>Was richtig ist</th></tr></thead>
+            <tbody>
+              <tr><td>Self-Close</td><td><code>self_closed = true</code> → voller Satz</td><td>50 % des Staffelsatzes</td></tr>
+              <tr><td>Null setter_email</td><td>Fallback <code>no_setter@company.com</code></td><td>Skip + Log</td></tr>
+              <tr><td>Null closed_at</td><td>Nicht als Skip erkannt</td><td>Skip + Log (Datum fehlt für Staffel)</td></tr>
+              <tr><td>Deduplizierung</td><td>„Letzten Eintrag behalten“</td><td>Skip + Log (keine stille Datenverfälschung)</td></tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin-top:1rem;"><strong>Fazit:</strong> AI lieferte Geschwindigkeit — Urteilsvermögen musste trotzdem stimmen.</p>
+
+          <details class="prompt">
+            <summary>Bester Prompt (aufklappen)</summary>
+            <div class="inner">
+              <pre><code class="language-text">Drei Korrekturen bevor wir den Prompt finalisieren:
 
 Erstens: Sprache ist Python, nicht JavaScript.
 
@@ -340,53 +535,62 @@ beim Start bestehende commissions.json laden und
 bereits vorhandene deal_ids überspringen.
 
 Kannst du den Cursor-Prompt mit diesen Korrekturen neu generieren?</code></pre>
+            </div>
+          </details>
         </div>
       </section>
 
-      <section>
-        <h2>Teil 4 — Root Cause &amp; Fix (Make.com)</h2>
-        <p>Buggy Formel:</p>
-        <pre><code class="language-plaintext">{{first(split(first(4.contacts[].name); " "))}}</code></pre>
-        <p>Fehler:</p>
-        <pre><code class="language-plaintext">DataError: 'Krisztina Verzar' is not a valid array.</code></pre>
-        <p class="small"><strong>Root Cause:</strong> contacts[].name ist kein Pfad — impliziter Map-Operator. Mehrere Kontakte → Array → first() ok. <strong>Ein Kontakt</strong> → Make flacht zu String → first() crasht. Live-Betrieb maskiert Tests mit mehreren Kontakten nicht.</p>
-        <p><strong>Fix:</strong></p>
-        <pre><code class="language-plaintext">{{first(split(4.contacts[1].name; " "))}}</code></pre>
-        <p class="small">contacts[1].name ist immer String. contacts[].name für Loops; contacts[1].name für Single-Value. Make fügt [] automatisch ein → häufiger Fehler.</p>
+      <section class="block wrap" id="teil4">
+        <h2>Teil 4 — Make.com: Root Cause &amp; Fix</h2>
+        <div class="panel">
+          <p><strong>Buggy Formel</strong></p>
+          <pre><code class="language-plaintext">{{first(split(first(4.contacts[].name); " "))}}</code></pre>
+          <p><strong>Fehlermeldung</strong></p>
+          <pre><code class="language-plaintext">DataError: 'Krisztina Verzar' is not a valid array.</code></pre>
+          <p class="muted"><strong>Root Cause:</strong> <code>contacts[].name</code> ist in Make.com kein klassischer Pfad — es ist ein <strong>impliziter Map-Operator</strong>. Mehrere Kontakte → Array → <code>first()</code> funktioniert. <strong>Ein einziger Kontakt</strong> → Make flacht zu einem String ab → <code>first()</code> crasht. Der Bug zeigt sich vor allem im Live-Betrieb; Tests mit mehreren Kontakten verdecken ihn.</p>
+          <p><strong>Fix</strong></p>
+          <pre><code class="language-plaintext">{{first(split(4.contacts[1].name; " "))}}</code></pre>
+          <p class="muted">Direkter Index <code>[1]</code> liefert immer einen String — unabhängig von der Kontaktanzahl. <code>contacts[].name</code> für Loops/Aggregatoren; <code>contacts[1].name</code> für Single-Value-Extraktion. Make fügt beim Klick auf Array-Variablen oft automatisch <code>[]</code> ein — eine häufige Falle.</p>
+        </div>
       </section>
 
-      <section>
+      <section class="block wrap" id="deliverables">
         <h2>Alle Deliverables</h2>
-        <table>
-          <thead><tr><th>Deliverable</th><th>Link</th></tr></thead>
-          <tbody>
-            <tr><td>GDrive (alle Dateien)</td><td><a href="https://drive.google.com/drive/folders/1E3-bWW1SrC6ydpYwCb0uSrf9S61nwobH?usp=sharing" target="_blank" rel="noopener">Google Drive öffnen</a></td></tr>
-            <tr><td>Gemini — Teil 1 Architektur</td><td><a href="https://gemini.google.com/share/af1e59d58813" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
-            <tr><td>Gemini — Teil 2 Code/Prompts</td><td><a href="https://gemini.google.com/share/24ec9d41151a" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
-            <tr><td>Gemini — Teil 4 Code Review</td><td><a href="https://gemini.google.com/share/8b27ddd96033" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
-          </tbody>
-        </table>
-        <p class="small">GDrive: setter_commissions.py, README, settled_deals_sample.json, commissions.json, ai_collaboration.md, szenarien.md, code_review.md, Cursor Screenshots</p>
+        <div class="panel">
+          <table class="data">
+            <thead><tr><th>Deliverable</th><th>Link</th></tr></thead>
+            <tbody>
+              <tr><td>GDrive (alle Dateien)</td><td><a href="https://drive.google.com/drive/folders/1E3-bWW1SrC6ydpYwCb0uSrf9S61nwobH?usp=sharing" target="_blank" rel="noopener">Google Drive öffnen</a></td></tr>
+              <tr><td>Gemini — Teil 1 Architektur</td><td><a href="https://gemini.google.com/share/af1e59d58813" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+              <tr><td>Gemini — Teil 2 Code/Prompts</td><td><a href="https://gemini.google.com/share/24ec9d41151a" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+              <tr><td>Gemini — Teil 4 Code Review</td><td><a href="https://gemini.google.com/share/8b27ddd96033" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin-top:1rem;">Im Drive: <code>setter_commissions.py</code>, README, <code>settled_deals_sample.json</code>, <code>commissions.json</code>, <code>ai_collaboration.md</code>, <code>szenarien.md</code>, <code>code_review.md</code>, Cursor-Screenshots.</p>
+        </div>
       </section>
-    </div>
+
+      <section class="block wrap" id="hintergrund">
+        <h2>Hintergrund</h2>
+        <div class="panel">
+          <h3>Warum dieses Thema</h3>
+          <p class="muted" style="margin-top:0;">
+            Provisionen verbinden Datenmodell, Zahlungsrealität und menschliche Sonderfälle. Die Challenge zeigt, dass solide Architektur (Snapshots, Audit, Idempotenz) und scharfe Code-Reviews (auch bei „No-Code“-Formeln) zusammengehören — besonders wenn AI beim Entwurf hilft, die Verantwortung für Produktionsregeln aber bei dir bleibt.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer wrap">
+      <p>© 2026 Florian Kuehnast · Commission Engine Challenge · Social.Academy</p>
+    </footer>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script>
-    Reveal.initialize({
-      hash: true,
-      slideNumber: "c/t",
-      transition: "slide",
-      backgroundTransition: "fade",
-      width: 1280,
-      height: 720,
-      margin: 0.06,
-      plugins: []
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.hljs) hljs.highlightAll();
     });
-    function highlight() { hljs.highlightAll(); }
-    highlight();
-    Reveal.on("slidechanged", highlight);
-    Reveal.on("fragmentshown", highlight);
   </script>
 </body>
 </html>
