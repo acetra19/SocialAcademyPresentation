@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Commission Engine Challenge — Social.Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css" id="theme" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <style>
+    :root {
+      --accent: #5b9bd5;
+      --fg-muted: #b8c0cc;
+      --border: #3a4556;
+    }
+    .reveal { font-family: "Segoe UI", system-ui, sans-serif; }
+    .reveal h1, .reveal h2, .reveal h3 { color: #fff; font-weight: 600; }
+    .reveal .subtitle { color: var(--fg-muted); font-size: 0.55em; margin-top: 0.6em; }
+    .reveal .accent { color: var(--accent); }
+    .reveal table { font-size: 0.45em; border-collapse: collapse; margin: 0.6em auto; width: 100%; max-width: 100%; }
+    .reveal table th, .reveal table td {
+      border: 1px solid var(--border); padding: 0.45em 0.55em; text-align: left; vertical-align: top;
+    }
+    .reveal table thead th { background: #1e2633; color: #e8ecf1; }
+    .reveal table tbody tr:nth-child(even) { background: rgba(255,255,255,0.04); }
+    .reveal .small { font-size: 0.75em; color: var(--fg-muted); }
+    .reveal .placeholder-box {
+      border: 2px dashed var(--border); border-radius: 8px; padding: 1.2em; margin: 0.8em auto; max-width: 720px;
+      background: #121820; color: var(--fg-muted); font-size: 0.4em;
+    }
+    .reveal .placeholder-box img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px; }
+    .reveal .caption { font-size: 0.35em; color: var(--fg-muted); margin-top: 0.5em; text-align: center; }
+    .reveal pre { width: 100%; box-shadow: none; font-size: 0.38em; }
+    .reveal pre code { max-height: 380px; padding: 0.6em 0.8em; border-radius: 6px; }
+    .reveal ul { text-align: left; }
+    .reveal .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; align-items: start; }
+    @media (max-width: 900px) { .reveal .cols { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h1>Commission Engine Challenge</h1>
+        <p class="subtitle">Social.Academy — AI Operations Manager</p>
+        <p>Florian Kuehnast · April 2026</p>
+        <p class="small">4 Teile · Architektur · Code · AI-Collaboration · Code Review</p>
+      </section>
+
+      <section>
+        <h2>Airtable Datenmodell — 6 Tabellen</h2>
+        <table>
+          <thead><tr><th>Tabelle</th><th>Zweck</th></tr></thead>
+          <tbody>
+            <tr><td>DEALS</td><td>Kerndaten des Vertragsabschlusses (Snapshot der Sales-Rollen)</td></tr>
+            <tr><td>INSTALLMENTS</td><td>Eine Rate = ein Record, verknüpft mit easybill_payment_id</td></tr>
+            <tr><td>TEAM_MEMBERS</td><td>Alle Mitarbeiter (aktive + ehemalige)</td></tr>
+            <tr><td>COMMISSION_RULES</td><td>Provisionssätze je Rolle und Deal-Typ</td></tr>
+            <tr><td>COMMISSIONS</td><td>Berechnete Provision pro Empfänger und Installment</td></tr>
+            <tr><td>ZUWEISUNGEN</td><td>Dynamische AM-Zuweisung (active_from / active_until)</td></tr>
+          </tbody>
+        </table>
+        <p class="small"><strong class="accent">Key Design:</strong> opener_id, setter_id, closer_id → <strong>Snapshot</strong> im DEALS-Record (unveränderlich). AM-Zuweisung → <strong>dynamisch</strong> via ZUWEISUNGEN (nachträglich änderbar).</p>
+        <p class="small">ZUWEISUNGEN: zuweisung_id (PK), deal_id (FK), employee_id (FK), role, active_from, active_until</p>
+        <div class="placeholder-box">
+          <img src="MiroScreenshot.png" alt="Airtable / Architektur (Miro)" style="max-height:220px;width:auto;" />
+          <p class="caption">Miro — Airtable Datenmodell</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Edge Cases — wie das Modell damit umgeht</h2>
+        <p><strong class="accent">Szenario 1 — Doppelzahlung:</strong> Make.com sucht beim Webhook die easybill_payment_id in INSTALLMENTS. Existiert der Record → Workflow bricht ab. Unique Key auf easybill_payment_id als Datenbankschutz.</p>
+        <p><strong class="accent">Szenario 2 — Refund:</strong> Offene COMMISSIONS → Status <code>storniert</code>. Bereits ausgezahlte → neuer Record mit negativem Betrag + Status <code>forderung_offen</code>. Ursprüngliche Records bleiben (Audit-Trail).</p>
+        <p class="small">Einschränkung: forderung_offen löst keinen automatischen Mahnungs-Workflow aus — manueller Schritt nötig.</p>
+        <p><strong class="accent">Szenario 3 — Personalwechsel:</strong> Sales-Snapshots → Rate geht an den Deal-Closer. AM-Wechsel → neuer ZUWEISUNGEN-Record. Bei Zahlungseingang: active_from ≤ paid_at und active_until leer oder in Zukunft.</p>
+        <p class="small">Einschränkung: Änderung der ZUWEISUNGEN ist manuell.</p>
+      </section>
+
+      <section>
+        <h2>Teil 2 — Setter-Provision aus messy JSON</h2>
+        <div class="cols">
+          <div>
+            <ul>
+              <li><strong>Input:</strong> settled_deals_sample.json (reale Datenfehler)</li>
+              <li><strong>Output:</strong> commissions.json — ein Objekt pro Deal</li>
+              <li><strong>Staffel (monatlich, Reset am Monatsersten):</strong> 1–10 → 50 €; 11–20 → 80 €; 21+ → 120 €</li>
+              <li><strong>Progressiv</strong> — Rang im Monat zählt</li>
+              <li><strong>Idempotent</strong> — zweiter Lauf: 0 neue Einträge</li>
+            </ul>
+          </div>
+          <div>
+            <table>
+              <thead><tr><th>Fehler</th><th>Behandlung</th></tr></thead>
+              <tbody>
+                <tr><td>Duplikat in Input</td><td>Skip → duplicate_in_source</td></tr>
+                <tr><td>setter_email null</td><td>Skip → missing_setter_email</td></tr>
+                <tr><td>closed_at null</td><td>Skip → missing_closed_at</td></tr>
+                <tr><td>Bereits in commissions.json</td><td>Skip → already_processed</td></tr>
+              </tbody>
+            </table>
+            <p class="small"><strong>Verifikation:</strong> 5 verarbeitet / 3 übersprungen · 225 € Gesamt · Self-Close: 50 % des Staffelsatzes</p>
+          </div>
+        </div>
+        <div class="placeholder-box cols" style="grid-template-columns:1fr 1fr;align-items:center;">
+          <div>
+            <img src="CursorCodeLauf.png" alt="Console: Setter commission run" style="max-height:260px;width:auto;margin:0 auto;" />
+            <p class="caption">Console — Lauf (Processed / Skipped / Total)</p>
+          </div>
+          <div>
+            <pre><code class="language-text">Processed: 5 | Skipped: 3 | Total commission: 225.00 EUR</code></pre>
+            <p class="caption">Erwarteter Output (Referenz)</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Wo AI geholfen hat — und wo nicht</h2>
+        <p class="small"><strong>Tool-Stack:</strong> Gemini [Thinking] + Cursor [Auto]</p>
+        <p><strong>Beschleunigt:</strong> (1) Datenmodell-Grundstruktur — AM/Sales (Snapshot vs. dynamisch) → 5 auf 6 Tabellen. (2) Cursor-Prompt-Iteration — 3 Runden bis Constraints stimmen; nahezu vollständiges Skript.</p>
+        <table>
+          <thead><tr><th>Fehler</th><th>Was Gemini sagte</th><th>Was richtig ist</th></tr></thead>
+          <tbody>
+            <tr><td>Self-Close</td><td>self_closed = true → voller Satz</td><td>50 % des Staffelsatzes</td></tr>
+            <tr><td>Null setter_email</td><td>Fallback no_setter@company.com</td><td>Skip + Log</td></tr>
+            <tr><td>Null closed_at</td><td>Nicht als Skip</td><td>Skip + Log (Datum fehlt für Staffel)</td></tr>
+            <tr><td>Deduplizierung</td><td>Letzten Eintrag behalten</td><td>Skip + Log (keine stille Verfälschung)</td></tr>
+          </tbody>
+        </table>
+        <p class="small"><strong>Fazit:</strong> AI lieferte Geschwindigkeit — Urteilsvermögen war manuell nötig.</p>
+        <div class="fragment">
+          <h3 style="margin-top:0.6em;font-size:0.85em;">Bester Prompt (optional)</h3>
+          <pre style="font-size:0.32em;"><code class="language-text">Drei Korrekturen bevor wir den Prompt finalisieren:
+
+Erstens: Sprache ist Python, nicht JavaScript.
+
+Zweitens: Bei Deduplizierung nicht "letzten Eintrag behalten" —
+sondern überspringen und loggen. Wir wollen keine stille Datenverfälschung.
+
+Drittens: Die Self-Close-Logik ist invertiert.
+self_closed = true bedeutet Setter = Closer,
+also 50% der Staffel-Provision — nicht der volle Satz.
+
+Außerdem fehlt noch der Idempotenz-Mechanismus:
+beim Start bestehende commissions.json laden und
+bereits vorhandene deal_ids überspringen.
+
+Kannst du den Cursor-Prompt mit diesen Korrekturen neu generieren?</code></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Teil 4 — Root Cause &amp; Fix (Make.com)</h2>
+        <p>Buggy Formel:</p>
+        <pre><code class="language-plaintext">{{first(split(first(4.contacts[].name); " "))}}</code></pre>
+        <p>Fehler:</p>
+        <pre><code class="language-plaintext">DataError: 'Krisztina Verzar' is not a valid array.</code></pre>
+        <p class="small"><strong>Root Cause:</strong> contacts[].name ist kein Pfad — impliziter Map-Operator. Mehrere Kontakte → Array → first() ok. <strong>Ein Kontakt</strong> → Make flacht zu String → first() crasht. Live-Betrieb maskiert Tests mit mehreren Kontakten nicht.</p>
+        <p><strong>Fix:</strong></p>
+        <pre><code class="language-plaintext">{{first(split(4.contacts[1].name; " "))}}</code></pre>
+        <p class="small">contacts[1].name ist immer String. contacts[].name für Loops; contacts[1].name für Single-Value. Make fügt [] automatisch ein → häufiger Fehler.</p>
+      </section>
+
+      <section>
+        <h2>Alle Deliverables</h2>
+        <table>
+          <thead><tr><th>Deliverable</th><th>Link</th></tr></thead>
+          <tbody>
+            <tr><td>GDrive (alle Dateien)</td><td><a href="https://drive.google.com/drive/folders/1E3-bWW1SrC6ydpYwCb0uSrf9S61nwobH?usp=sharing" target="_blank" rel="noopener">Google Drive öffnen</a></td></tr>
+            <tr><td>Gemini — Teil 1 Architektur</td><td><a href="https://gemini.google.com/share/af1e59d58813" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+            <tr><td>Gemini — Teil 2 Code/Prompts</td><td><a href="https://gemini.google.com/share/24ec9d41151a" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+            <tr><td>Gemini — Teil 4 Code Review</td><td><a href="https://gemini.google.com/share/8b27ddd96033" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+          </tbody>
+        </table>
+        <p class="small">GDrive: setter_commissions.py, README, settled_deals_sample.json, commissions.json, ai_collaboration.md, szenarien.md, code_review.md, Cursor Screenshots</p>
+      </section>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: "c/t",
+      transition: "slide",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      plugins: []
+    });
+    function highlight() { hljs.highlightAll(); }
+    highlight();
+    Reveal.on("slidechanged", highlight);
+    Reveal.on("fragmentshown", highlight);
+  </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+[
+  {
+    "deal_id": "DEAL-1042",
+    "closed_at": "2026-03-03T09:12:00Z",
+    "setter_email": "lisa@example.com",
+    "closer_email": "lisa@example.com",
+    "self_closed": true,
+    "deal_value_eur": 4800,
+    "product": "KYB"
+  },
+  {
+    "deal_id": "DEAL-1043",
+    "closed_at": "2026-03-03T14:45:00Z",
+    "setter_email": "marc@example.com",
+    "closer_email": "anna@example.com",
+    "self_closed": false,
+    "deal_value_eur": 9600,
+    "product": "Scale Up"
+  },
+  {
+    "deal_id": "DEAL-1044",
+    "closed_at": "2026-03-05",
+    "setter_email": "MARC@Example.com",
+    "closer_email": "anna@example.com",
+    "self_closed": "false",
+    "deal_value_eur": "7200",
+    "product": "KYB"
+  },
+  {
+    "deal_id": "DEAL-1043",
+    "closed_at": "2026-03-03T14:45:00Z",
+    "setter_email": "marc@example.com",
+    "closer_email": "anna@example.com",
+    "self_closed": false,
+    "deal_value_eur": 9600,
+    "product": "Scale Up"
+  },
+  {
+    "deal_id": "DEAL-1045",
+    "closed_at": "2026-02-28T23:55:00Z",
+    "setter_email": "lisa@example.com",
+    "closer_email": "tom@example.com",
+    "self_closed": false,
+    "deal_value_eur": 3600,
+    "product": "KYB Foundation"
+  },
+  {
+    "deal_id": "DEAL-1046",
+    "closed_at": null,
+    "setter_email": "marc@example.com",
+    "closer_email": "anna@example.com",
+    "self_closed": false,
+    "deal_value_eur": 4800,
+    "product": "KYB"
+  },
+  {
+    "deal_id": "DEAL-1047",
+    "closed_at": "2026-03-10T10:00:00Z",
+    "setter_email": null,
+    "closer_email": "anna@example.com",
+    "self_closed": false,
+    "deal_value_eur": 12000,
+    "product": "Scale Up + AI"
+  },
+  {
+    "deal_id": "DEAL-1048",
+    "closed_at": "2026-03-11T11:30:00Z",
+    "setter_email": "marc@example.com ",
+    "closer_email": "anna@example.com",
+    "self_closed": false,
+    "deal_value_eur": 4800,
+    "product": "KYB"
+  }
+]

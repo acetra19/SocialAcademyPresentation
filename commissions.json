@@ -1,0 +1,66 @@
+[
+  {
+    "deal_id": "DEAL-1042",
+    "setter_email": "lisa@example.com",
+    "month": "2026-03",
+    "tier_reached": 1,
+    "amount_eur": 25.0,
+    "reason_if_skipped": null
+  },
+  {
+    "deal_id": "DEAL-1043",
+    "setter_email": "marc@example.com",
+    "month": "2026-03",
+    "tier_reached": 1,
+    "amount_eur": 50.0,
+    "reason_if_skipped": null
+  },
+  {
+    "deal_id": "DEAL-1044",
+    "setter_email": "marc@example.com",
+    "month": "2026-03",
+    "tier_reached": 1,
+    "amount_eur": 50.0,
+    "reason_if_skipped": null
+  },
+  {
+    "deal_id": "DEAL-1043",
+    "setter_email": "marc@example.com",
+    "month": "2026-03",
+    "tier_reached": 0,
+    "amount_eur": 0.0,
+    "reason_if_skipped": "duplicate_in_source"
+  },
+  {
+    "deal_id": "DEAL-1045",
+    "setter_email": "lisa@example.com",
+    "month": "2026-02",
+    "tier_reached": 1,
+    "amount_eur": 50.0,
+    "reason_if_skipped": null
+  },
+  {
+    "deal_id": "DEAL-1046",
+    "setter_email": "marc@example.com",
+    "month": "",
+    "tier_reached": 0,
+    "amount_eur": 0.0,
+    "reason_if_skipped": "missing_closed_at"
+  },
+  {
+    "deal_id": "DEAL-1047",
+    "setter_email": "",
+    "month": "2026-03",
+    "tier_reached": 0,
+    "amount_eur": 0.0,
+    "reason_if_skipped": "missing_setter_email"
+  },
+  {
+    "deal_id": "DEAL-1048",
+    "setter_email": "marc@example.com",
+    "month": "2026-03",
+    "tier_reached": 1,
+    "amount_eur": 50.0,
+    "reason_if_skipped": null
+  }
+]
