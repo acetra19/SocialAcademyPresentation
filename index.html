@@ -319,23 +319,6 @@
       border: 1px solid rgba(14, 165, 233, 0.28);
       color: #0c4a6e;
     }
-    details.prompt {
-      margin-top: 1rem;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(241, 245, 249, 0.75);
-      padding: 0 1rem;
-    }
-    details.prompt summary {
-      cursor: pointer;
-      font-weight: 600;
-      padding: 0.85rem 0;
-      list-style: none;
-      color: var(--text);
-    }
-    details.prompt summary::-webkit-details-marker { display: none; }
-    details.prompt[open] summary { border-bottom: 1px solid var(--border); margin-bottom: 0.75rem; }
-    details.prompt .inner { padding-bottom: 1rem; }
     .footer {
       padding: 2.5rem 0 3rem;
       text-align: center;
@@ -679,10 +662,8 @@
           </table>
           <p class="muted" style="margin-top:1rem;"><strong>Fazit:</strong> AI lieferte Geschwindigkeit — Urteilsvermögen musste trotzdem stimmen.</p>
 
-          <details class="prompt">
-            <summary>Bester Prompt (aufklappen)</summary>
-            <div class="inner">
-              <pre><code class="language-text">Drei Korrekturen bevor wir den Prompt finalisieren:
+          <h3 style="margin-top:1.5rem;">Bester Prompt</h3>
+          <pre><code class="language-text">Drei Korrekturen bevor wir den Prompt finalisieren:
 
 Erstens: Sprache ist Python, nicht JavaScript.
 
@@ -698,8 +679,6 @@ beim Start bestehende commissions.json laden und
 bereits vorhandene deal_ids überspringen.
 
 Kannst du den Cursor-Prompt mit diesen Korrekturen neu generieren?</code></pre>
-            </div>
-          </details>
         </div>
       </section>
 
