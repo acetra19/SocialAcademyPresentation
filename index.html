@@ -352,6 +352,133 @@
       text-underline-offset: 0.18em;
     }
     .panel a:hover { color: var(--link-hover); }
+    .figure__trigger {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: zoom-in;
+      border-radius: 10px;
+      overflow: hidden;
+      line-height: 0;
+      transition: box-shadow 0.2s, transform 0.15s;
+    }
+    .figure__trigger:hover {
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.45);
+      transform: scale(1.01);
+    }
+    .figure__trigger:focus-visible {
+      outline: 2px solid var(--accent-hover);
+      outline-offset: 3px;
+    }
+    .figure__trigger img {
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+    .figure__hint {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+      font-weight: 500;
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+    .lightbox[hidden] { display: none !important; }
+    body.lightbox-open { overflow: hidden; }
+    .lightbox__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(6px);
+      border: none;
+      cursor: zoom-out;
+    }
+    .lightbox__dialog {
+      position: relative;
+      z-index: 1;
+      max-width: min(96vw, 1200px);
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lightbox__dialog img {
+      max-width: 100%;
+      max-height: min(78vh, 900px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+    .lightbox__close {
+      position: absolute;
+      top: -2.75rem;
+      right: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox__close:hover { background: rgba(255, 255, 255, 0.22); }
+    .lightbox__bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .lightbox__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: var(--link);
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .lightbox__btn:hover { background: var(--link-hover); color: #fff; }
+    @media (max-width: 640px) {
+      .lightbox__close { top: -0.25rem; right: -0.25rem; position: fixed; z-index: 2; }
+    }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   </style>
 </head>
 <body>
@@ -467,8 +594,10 @@
           </p>
           <p class="muted">ZUWEISUNGEN: <code>zuweisung_id</code> (PK), <code>deal_id</code> (FK), <code>employee_id</code> (FK), <code>role</code>, <code>active_from</code>, <code>active_until</code></p>
           <figure class="figure">
-            <img src="MiroScreenshot.png" alt="Airtable Datenmodell in Miro" width="800" height="400" loading="lazy" />
-            <figcaption>Miro — Airtable Datenmodell</figcaption>
+            <button type="button" class="figure__trigger js-lightbox" data-src="MiroScreenshot.png" data-filename="MiroScreenshot.png" aria-label="Screenshot vergrößern: Miro Datenmodell">
+              <img src="MiroScreenshot.png" alt="Airtable Datenmodell in Miro" width="800" height="400" loading="lazy" />
+            </button>
+            <figcaption>Miro — Airtable Datenmodell<span class="figure__hint">Klick zum Vergrößern · Download in der Großansicht</span></figcaption>
           </figure>
         </div>
       </section>
@@ -515,8 +644,10 @@
           </div>
           <div class="grid-2" style="margin-top:1.25rem;">
             <figure class="figure" style="margin:0;">
-              <img src="CursorCodeLauf.png" alt="Konsolen-Output Setter Commission" loading="lazy" />
-              <figcaption>Console — Lauf (Processed / Skipped / Total)</figcaption>
+              <button type="button" class="figure__trigger js-lightbox" data-src="CursorCodeLauf.png" data-filename="CursorCodeLauf.png" aria-label="Screenshot vergrößern: Console output">
+                <img src="CursorCodeLauf.png" alt="Konsolen-Output Setter Commission" loading="lazy" />
+              </button>
+              <figcaption>Console — Lauf (Processed / Skipped / Total)<span class="figure__hint">Klick zum Vergrößern · Download in der Großansicht</span></figcaption>
             </figure>
             <div>
               <p class="muted" style="margin:0 0 0.5rem;">Erwarteter Output (Referenz)</p>
@@ -524,8 +655,10 @@
             </div>
           </div>
           <figure class="figure" style="margin-top:1rem;">
-            <img src="CursorCodeErstellung.png" alt="Cursor bei der Code-Erstellung" loading="lazy" />
-            <figcaption>Cursor — Code-Erstellung (Kontext)</figcaption>
+            <button type="button" class="figure__trigger js-lightbox" data-src="CursorCodeErstellung.png" data-filename="CursorCodeErstellung.png" aria-label="Screenshot vergrößern: Cursor Code">
+              <img src="CursorCodeErstellung.png" alt="Cursor bei der Code-Erstellung" loading="lazy" />
+            </button>
+            <figcaption>Cursor — Code-Erstellung (Kontext)<span class="figure__hint">Klick zum Vergrößern · Download in der Großansicht</span></figcaption>
           </figure>
         </div>
       </section>
@@ -600,10 +733,58 @@ Kannst du den Cursor-Prompt mit diesen Korrekturen neu generieren?</code></pre>
     </footer>
   </div>
 
+  <div id="lightbox" class="lightbox" hidden role="presentation">
+    <button type="button" class="lightbox__backdrop js-lightbox-close" aria-label="Schließen"></button>
+    <div class="lightbox__dialog" role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
+      <button type="button" class="lightbox__close js-lightbox-close" aria-label="Schließen">×</button>
+      <img id="lightbox-image" src="" alt="" />
+      <p id="lightbox-title" class="visually-hidden">Vergrößerte Bildansicht</p>
+      <div class="lightbox__bar">
+        <a id="lightbox-download" class="lightbox__btn" href="" download>Herunterladen</a>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (window.hljs) hljs.highlightAll();
+
+      var lb = document.getElementById("lightbox");
+      var lbImg = document.getElementById("lightbox-image");
+      var lbDl = document.getElementById("lightbox-download");
+
+      function openLightbox(src, filename, alt) {
+        lbImg.src = src;
+        lbImg.alt = alt || "";
+        lbDl.href = src;
+        lbDl.setAttribute("download", filename || src.split("/").pop() || "screenshot.png");
+        lb.hidden = false;
+        document.body.classList.add("lightbox-open");
+      }
+
+      function closeLightbox() {
+        lb.hidden = true;
+        lbImg.removeAttribute("src");
+        document.body.classList.remove("lightbox-open");
+      }
+
+      document.querySelectorAll(".js-lightbox").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var img = btn.querySelector("img");
+          var src = btn.getAttribute("data-src") || (img && img.getAttribute("src")) || "";
+          var fn = btn.getAttribute("data-filename") || "";
+          openLightbox(src, fn, img ? img.getAttribute("alt") : "");
+        });
+      });
+
+      document.querySelectorAll(".js-lightbox-close").forEach(function (el) {
+        el.addEventListener("click", closeLightbox);
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !lb.hidden) closeLightbox();
+      });
     });
   </script>
 </body>
