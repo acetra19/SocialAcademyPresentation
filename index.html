@@ -10,13 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --accent: #38bdf8;
-      --accent2: #a78bfa;
-      --muted: #94a3b8;
-      --border: rgba(148, 163, 184, 0.2);
-      --glass: rgba(15, 23, 42, 0.5);
-      --edge: rgba(255, 255, 255, 0.07);
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent2: #7c3aed;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: rgba(15, 23, 42, 0.12);
+      --glass: rgba(255, 255, 255, 0.82);
+      --edge: rgba(255, 255, 255, 0.95);
       --max: 52rem;
+      --link: #0369a1;
+      --link-hover: #0c4a6e;
     }
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -26,8 +30,8 @@
       font-family: "DM Sans", system-ui, sans-serif;
       font-size: 1.05rem;
       line-height: 1.6;
-      color: #e2e8f0;
-      background: #030712;
+      color: var(--text);
+      background: linear-gradient(165deg, #f8fafc 0%, #e2e8f0 48%, #f1f5f9 100%);
     }
     .ambient {
       position: fixed;
@@ -46,14 +50,14 @@
     .ambient__blob--1 {
       width: min(90vw, 700px);
       height: min(90vw, 700px);
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.42) 0%, transparent 72%);
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, transparent 72%);
       top: -12%;
       left: -8%;
     }
     .ambient__blob--2 {
       width: min(75vw, 560px);
       height: min(75vw, 560px);
-      background: radial-gradient(circle, rgba(167, 139, 250, 0.38) 0%, transparent 72%);
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.22) 0%, transparent 72%);
       bottom: -18%;
       right: -12%;
       animation-delay: -8s;
@@ -62,7 +66,7 @@
     .ambient__blob--3 {
       width: min(60vw, 420px);
       height: min(60vw, 420px);
-      background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 72%);
+      background: radial-gradient(circle, rgba(52, 211, 153, 0.16) 0%, transparent 72%);
       top: 45%;
       left: 40%;
       animation-delay: -14s;
@@ -77,10 +81,10 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(148, 163, 184, 0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+        linear-gradient(rgba(71, 85, 105, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(71, 85, 105, 0.07) 1px, transparent 1px);
       background-size: 44px 44px;
-      mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 10%, transparent 72%);
+      mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, black 12%, transparent 78%);
       animation: drift 45s linear infinite;
     }
     @keyframes drift {
@@ -89,7 +93,7 @@
     .ambient__noise {
       position: absolute;
       inset: 0;
-      opacity: 0.032;
+      opacity: 0.018;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
     .site {
@@ -106,15 +110,16 @@
       justify-content: space-between;
       gap: 0.75rem;
       padding: 0.65rem clamp(1rem, 4vw, 2rem);
-      background: rgba(3, 7, 18, 0.72);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
     }
     .nav__brand {
       font-weight: 700;
       font-size: 0.95rem;
-      color: #f8fafc;
+      color: var(--text);
       text-decoration: none;
     }
     .nav__links {
@@ -129,7 +134,7 @@
       border-bottom: 1px solid transparent;
       transition: color 0.2s, border-color 0.2s;
     }
-    .nav__links a:hover { color: #fff; border-bottom-color: rgba(56, 189, 248, 0.5); }
+    .nav__links a:hover { color: var(--link-hover); border-bottom-color: rgba(3, 105, 161, 0.45); }
     .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem); }
     .hero {
       padding: clamp(2.5rem, 8vw, 4.5rem) 0 clamp(2rem, 5vw, 3rem);
@@ -141,7 +146,7 @@
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--accent-hover);
       margin-bottom: 0.75rem;
     }
     .hero h1 {
@@ -150,7 +155,7 @@
       font-weight: 700;
       line-height: 1.15;
       letter-spacing: -0.03em;
-      background: linear-gradient(120deg, #fff 0%, #cbd5e1 38%, #38bdf8 62%, #a78bfa 100%);
+      background: linear-gradient(120deg, #0f172a 0%, #334155 42%, #0284c7 72%, #7c3aed 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -161,7 +166,7 @@
       color: var(--muted);
       font-size: 1.05rem;
     }
-    .hero__meta { color: #cbd5e1; font-size: 0.95rem; margin-bottom: 1rem; }
+    .hero__meta { color: var(--muted); font-size: 0.95rem; margin-bottom: 1rem; }
     .chips {
       display: flex;
       flex-wrap: wrap;
@@ -173,7 +178,7 @@
       padding: 0.35rem 0.85rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.55);
+      background: rgba(255, 255, 255, 0.75);
       color: var(--muted);
     }
     section.block {
@@ -184,7 +189,7 @@
       font-size: 1.45rem;
       font-weight: 700;
       letter-spacing: -0.02em;
-      color: #f8fafc;
+      color: var(--text);
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--border);
     }
@@ -192,20 +197,21 @@
       margin: 1.5rem 0 0.65rem;
       font-size: 1.1rem;
       font-weight: 600;
-      color: #e2e8f0;
+      color: #1e293b;
     }
     .panel {
-      background: linear-gradient(160deg, var(--glass) 0%, rgba(30, 41, 59, 0.38) 100%);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--edge);
+      background: linear-gradient(165deg, var(--glass) 0%, rgba(248, 250, 252, 0.92) 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
       border-radius: 18px;
       padding: 1.35rem 1.5rem;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 20px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.95) inset, 0 14px 36px rgba(15, 23, 42, 0.08);
     }
     .panel + .panel { margin-top: 1rem; }
+    .panel p { color: #334155; }
     .muted { color: var(--muted); font-size: 0.95rem; }
-    .accent { color: var(--accent); font-weight: 600; }
+    .accent { color: var(--accent-hover); font-weight: 600; }
     .list-check {
       margin: 0;
       padding-left: 1.2rem;
@@ -228,24 +234,24 @@
       padding: 1.1rem 1.15rem;
       border-radius: 14px;
       border: 1px solid var(--border);
-      background: rgba(2, 6, 23, 0.45);
+      background: rgba(255, 255, 255, 0.72);
       text-decoration: none;
       color: inherit;
       transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     }
     .card:hover {
-      border-color: rgba(56, 189, 248, 0.35);
-      box-shadow: 0 0 32px rgba(56, 189, 248, 0.12);
+      border-color: rgba(2, 132, 199, 0.35);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
       transform: translateY(-2px);
     }
     .card__num {
       font-family: "JetBrains Mono", monospace;
       font-size: 0.75rem;
       font-weight: 500;
-      color: var(--accent);
+      color: var(--accent-hover);
       margin-bottom: 0.35rem;
     }
-    .card__title { font-weight: 700; font-size: 1rem; margin-bottom: 0.35rem; color: #f1f5f9; }
+    .card__title { font-weight: 700; font-size: 1rem; margin-bottom: 0.35rem; color: var(--text); }
     .card__desc { font-size: 0.88rem; color: var(--muted); margin: 0; line-height: 1.45; }
     table.data {
       width: 100%;
@@ -262,18 +268,18 @@
       vertical-align: top;
     }
     table.data thead th {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.88));
-      color: #f8fafc;
+      background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
+      color: #0f172a;
       font-weight: 600;
     }
-    table.data tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.03); }
-    table.data tbody tr:hover { background: rgba(56, 189, 248, 0.06); }
+    table.data tbody tr:nth-child(even) { background: rgba(241, 245, 249, 0.65); }
+    table.data tbody tr:hover { background: rgba(224, 242, 254, 0.65); }
     .figure {
       margin-top: 1rem;
       border-radius: 14px;
       border: 1px solid var(--border);
       padding: 1rem;
-      background: rgba(2, 6, 23, 0.4);
+      background: rgba(255, 255, 255, 0.55);
     }
     .figure img {
       display: block;
@@ -299,24 +305,25 @@
       display: block;
       padding: 1rem 1.1rem !important;
       font-family: "JetBrains Mono", ui-monospace, monospace !important;
-      border: 1px solid rgba(148, 163, 184, 0.15);
+      border: 1px solid rgba(15, 23, 42, 0.1);
       border-radius: 10px;
-      background: rgba(2, 6, 23, 0.75) !important;
+      background: #0f172a !important;
+      color: #e2e8f0 !important;
     }
     :not(pre) > code {
       font-family: "JetBrains Mono", monospace;
       font-size: 0.88em;
       padding: 0.15em 0.4em;
       border-radius: 6px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.22);
-      color: #bae6fd;
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.28);
+      color: #0c4a6e;
     }
     details.prompt {
       margin-top: 1rem;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background: rgba(2, 6, 23, 0.35);
+      background: rgba(241, 245, 249, 0.75);
       padding: 0 1rem;
     }
     details.prompt summary {
@@ -324,7 +331,7 @@
       font-weight: 600;
       padding: 0.85rem 0;
       list-style: none;
-      color: #e2e8f0;
+      color: var(--text);
     }
     details.prompt summary::-webkit-details-marker { display: none; }
     details.prompt[open] summary { border-bottom: 1px solid var(--border); margin-bottom: 0.75rem; }
@@ -337,7 +344,14 @@
       border-top: 1px solid var(--border);
       margin-top: 1rem;
     }
-    .footer a { color: #7dd3fc; }
+    .footer a { color: var(--link); }
+    .panel a {
+      color: var(--link);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+    .panel a:hover { color: var(--link-hover); }
   </style>
 </head>
 <body>
@@ -353,6 +367,7 @@
     <header class="nav">
       <a class="nav__brand" href="#top">Commission Engine</a>
       <nav class="nav__links" aria-label="Sektionen">
+        <a href="#deliverables">Deliverables</a>
         <a href="#warum">Warum</a>
         <a href="#aufbau">Aufbau</a>
         <a href="#teil1">Teil 1</a>
@@ -360,7 +375,6 @@
         <a href="#teil2">Teil 2</a>
         <a href="#teil3">AI</a>
         <a href="#teil4">Make.com</a>
-        <a href="#deliverables">Links</a>
       </nav>
     </header>
 
@@ -369,7 +383,7 @@
         <p class="kicker">Bewerbungsprojekt · Social.Academy</p>
         <h1>Commission Engine Challenge — von Datenmodell bis Code Review</h1>
         <p class="hero__sub">
-          Vier aufeinander aufbauende Teile: Airtable-Architektur, Python-Setter-Logik, ehrliche AI-Collaboration und eine Make.com-Root-Cause-Analyse — alles dokumentiert und verlinkt.
+          Vier aufeinander aufbauende Teile: Airtable-Architektur, Python-Setter-Logik, AI-Collaboration und eine Make.com-Root-Cause-Analyse — alles dokumentiert und verlinkt.
         </p>
         <p class="hero__meta">Florian Kuehnast · AI Operations Manager · April 2026</p>
         <div class="chips">
@@ -380,13 +394,29 @@
         </div>
       </div>
 
+      <section class="block wrap" id="deliverables">
+        <h2>Alle Deliverables</h2>
+        <div class="panel">
+          <table class="data">
+            <thead><tr><th>Deliverable</th><th>Link</th></tr></thead>
+            <tbody>
+              <tr><td>GDrive (alle Dateien)</td><td><a href="https://drive.google.com/drive/folders/1E3-bWW1SrC6ydpYwCb0uSrf9S61nwobH?usp=sharing" target="_blank" rel="noopener">Google Drive öffnen</a></td></tr>
+              <tr><td>Gemini — Teil 1 Architektur</td><td><a href="https://gemini.google.com/share/af1e59d58813" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+              <tr><td>Gemini — Teil 2 Code/Prompts</td><td><a href="https://gemini.google.com/share/24ec9d41151a" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+              <tr><td>Gemini — Teil 4 Code Review</td><td><a href="https://gemini.google.com/share/8b27ddd96033" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
+            </tbody>
+          </table>
+          <p class="muted" style="margin-top:1rem;">Im Drive: <code>setter_commissions.py</code>, README, <code>settled_deals_sample.json</code>, <code>commissions.json</code>, <code>ai_collaboration.md</code>, <code>szenarien.md</code>, <code>code_review.md</code>, Cursor-Screenshots.</p>
+        </div>
+      </section>
+
       <section class="block wrap" id="warum">
         <h2>Warum dieses Projekt</h2>
         <div class="panel">
           <ul class="list-check">
             <li><strong>End-to-End denken:</strong> Vom Datenmodell über automatisierte Auszahlungslogik bis zum Debugging in Production-Formeln — ein roter Faden statt isolierter Snippets.</li>
             <li><strong>Operativ relevant:</strong> Doppelzahlungen, Refunds und Personalwechsel sind keine Folien-Theorie, sondern explizit modellierte Szenarien.</li>
-            <li><strong>Nachvollziehbar:</strong> Chats, Code, Skizzen und Screenshots sind gebündelt — inklusive ehrlicher AI-Fehler und Korrekturen.</li>
+            <li><strong>Nachvollziehbar:</strong> Chats, Code, Skizzen und Screenshots sind gebündelt — inklusive dokumentierter AI-Fehler und Korrekturen.</li>
           </ul>
         </div>
       </section>
@@ -551,22 +581,6 @@ Kannst du den Cursor-Prompt mit diesen Korrekturen neu generieren?</code></pre>
           <p><strong>Fix</strong></p>
           <pre><code class="language-plaintext">{{first(split(4.contacts[1].name; " "))}}</code></pre>
           <p class="muted">Direkter Index <code>[1]</code> liefert immer einen String — unabhängig von der Kontaktanzahl. <code>contacts[].name</code> für Loops/Aggregatoren; <code>contacts[1].name</code> für Single-Value-Extraktion. Make fügt beim Klick auf Array-Variablen oft automatisch <code>[]</code> ein — eine häufige Falle.</p>
-        </div>
-      </section>
-
-      <section class="block wrap" id="deliverables">
-        <h2>Alle Deliverables</h2>
-        <div class="panel">
-          <table class="data">
-            <thead><tr><th>Deliverable</th><th>Link</th></tr></thead>
-            <tbody>
-              <tr><td>GDrive (alle Dateien)</td><td><a href="https://drive.google.com/drive/folders/1E3-bWW1SrC6ydpYwCb0uSrf9S61nwobH?usp=sharing" target="_blank" rel="noopener">Google Drive öffnen</a></td></tr>
-              <tr><td>Gemini — Teil 1 Architektur</td><td><a href="https://gemini.google.com/share/af1e59d58813" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
-              <tr><td>Gemini — Teil 2 Code/Prompts</td><td><a href="https://gemini.google.com/share/24ec9d41151a" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
-              <tr><td>Gemini — Teil 4 Code Review</td><td><a href="https://gemini.google.com/share/8b27ddd96033" target="_blank" rel="noopener">Chat öffnen</a></td></tr>
-            </tbody>
-          </table>
-          <p class="muted" style="margin-top:1rem;">Im Drive: <code>setter_commissions.py</code>, README, <code>settled_deals_sample.json</code>, <code>commissions.json</code>, <code>ai_collaboration.md</code>, <code>szenarien.md</code>, <code>code_review.md</code>, Cursor-Screenshots.</p>
         </div>
       </section>
 
